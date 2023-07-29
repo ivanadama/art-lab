@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+  <script>
+    let midiOutput;
+    let midiNotes = [60, 62, 64, 65, 67, 69, 71, 72]; // (C4 to C5)
+
+    
+    let numericData = [0.2, 0.8, 0.5, 0.3, 0.9, 0.4, 0.6, 0.7];
+
+    function setup() {
+      
+      navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+    }
+
+    function onMIDISuccess(midiAccess) {
+      // Get the first available MIDI output device
+      const outputs = midiAccess.outputs;
+      if (outputs.size > 0) {
+        midiOutput = outputs.values().next().value;
+        console.log("MIDI Output Connected:", midiOutput.name);
+        sendMIDINotes();
+      } else {
+        console.log("No MIDI output devices found.");
+      }
+    }
+
+    function onMIDIFailure() {
+      console.log("Failed to access MIDI devices.");
+    }
+
+    function sendMIDINotes() {
+      if (!midiOutput) return; // Exit if MIDI output is not available
+      let velocity = 64; // You can adjust the velocity (0-127) as per your preference.
+
+      for (let i = 0; i < numericData.length; i++) {
+        // Map the numeric data to MIDI notes range
+        let index = floor(map(numericData[i], 0, 1, 0, midiNotes.length));
+        let note = midiNotes[index];
+
+        // Send MIDI Note On message
+        midiOutput.send([0x90, note, velocity]);
+
+        // Set a small delay before sending the Note Off message (adjust as needed)
+        setTimeout(() => {
+          // Send MIDI Note Off message
+          midiOutput.send([0x80, note, 0]);
+        }, 200); // Adjust the delay time (milliseconds) as needed
+      }
+    }
+  </script>
+</body>
+</html>
