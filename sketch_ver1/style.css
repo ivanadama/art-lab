@@ -1,0 +1,25 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background:#f8f4e9;
+  touch-action: none;
+}
+
+main {
+  margin:auto;
+}
+
+#p5_loading {
+  color:#3e3e3e;
+   width:100vw; 
+   height:100vh;
+   font-family:Georgia, Times, "Times New Roman",  serif; 
+   text-align:center;
+   display: flex;
+   justify-content: center;
+   align-items: center;  
+}
